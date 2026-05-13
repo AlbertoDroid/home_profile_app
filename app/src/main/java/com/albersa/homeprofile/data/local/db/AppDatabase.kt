@@ -18,7 +18,7 @@ import com.albersa.homeprofile.data.local.db.entity.TaskLogEntryEntity
         TaskLogEntryEntity::class,
         NotificationLogEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {

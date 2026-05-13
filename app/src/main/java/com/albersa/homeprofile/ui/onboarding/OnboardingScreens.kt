@@ -22,7 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.albersa.homeprofile.ui.components.OnboardingScaffold
@@ -53,7 +53,7 @@ fun OnboardingWelcomeScreen(onNext: () -> Unit) {
             color = MaterialTheme.colorScheme.primary
         )
         Spacer(Modifier.height(32.dp))
-        BulletItem("Personalised to your property")
+        BulletItem("Personalized to your property")
         Spacer(Modifier.height(12.dp))
         BulletItem("Timely seasonal reminders")
         Spacer(Modifier.height(12.dp))
@@ -147,13 +147,13 @@ fun OnboardingPropertyBasicsScreen(
             )
         }
         SectionDivider()
-        ProfileSection("Postcode (optional)") {
+        ProfileSection("ZIP Code (optional)") {
             OutlinedTextField(
-                value = uiState.postcodeInput,
-                onValueChange = viewModel::onPostcodeChanged,
-                placeholder = { Text("e.g. SW1A 1AA") },
+                value = uiState.zipCodeInput,
+                onValueChange = viewModel::onZipCodeChanged,
+                placeholder = { Text("e.g. 90210") },
                 singleLine = true,
-                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Characters),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 supportingText = { Text("Used only to estimate your local climate — never stored") },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -177,7 +177,7 @@ fun OnboardingConstructionScreen(
         onSkip = onSkip,
         onCta = onContinue
     ) {
-        ProfileSection("Wall type") {
+        ProfileSection("Wall / exterior type") {
             SelectionGroup(
                 options = OnboardingOptions.WALL_TYPES,
                 selectedOption = uiState.wallType,
@@ -201,33 +201,41 @@ fun OnboardingConstructionScreen(
             )
         }
         SectionDivider()
-        ProfileSection("Loft insulation") {
+        ProfileSection("Attic insulation") {
             SelectionGroup(
-                options = OnboardingOptions.LOFT_INSULATION,
-                selectedOption = uiState.loftInsulation,
-                onOptionSelected = viewModel::onLoftInsulationSelected
+                options = OnboardingOptions.ATTIC_INSULATION,
+                selectedOption = uiState.atticInsulation,
+                onOptionSelected = viewModel::onAtticInsulationSelected
             )
         }
         SectionDivider()
-        ProfileSection("Double glazing") {
+        ProfileSection("Windows") {
             SelectionGroup(
-                options = OnboardingOptions.DOUBLE_GLAZING,
-                selectedOption = uiState.doubleGlazing,
-                onOptionSelected = viewModel::onDoubleGlazingSelected
+                options = OnboardingOptions.WINDOW_TYPES,
+                selectedOption = uiState.windowType,
+                onOptionSelected = viewModel::onWindowTypeSelected
             )
         }
         SectionDivider()
-        ProfileSection("Basement / cellar") {
-            YesNoChipGroup(value = uiState.hasBasement, onValueChange = viewModel::onHasBasementChanged)
+        ProfileSection("Basement / crawl space") {
+            SelectionGroup(
+                options = OnboardingOptions.BASEMENT_TYPES,
+                selectedOption = uiState.basementType,
+                onOptionSelected = viewModel::onBasementTypeSelected
+            )
         }
         SectionDivider()
-        ProfileSection("Conservatory / extension") {
-            YesNoChipGroup(value = uiState.hasConservatory, onValueChange = viewModel::onHasConservatoryChanged)
+        ProfileSection("Deck / patio") {
+            YesNoChipGroup(value = uiState.hasDeck, onValueChange = viewModel::onHasDeckChanged)
+        }
+        SectionDivider()
+        ProfileSection("Attached garage") {
+            YesNoChipGroup(value = uiState.hasAttachedGarage, onValueChange = viewModel::onHasAttachedGarageChanged)
         }
     }
 }
 
-// ─── O4 — Heating & Hot Water ────────────────────────────────────────────────
+// ─── O4 — Heating & Cooling ──────────────────────────────────────────────────
 
 @Composable
 fun OnboardingHeatingScreen(
@@ -237,7 +245,6 @@ fun OnboardingHeatingScreen(
     onSkip: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val showBoilerFields = uiState.heatingType in OnboardingOptions.BOILER_HEATING_TYPES
     OnboardingScaffold(
         progressText = "Step 3 of 5",
         onBack = onBack,
@@ -251,52 +258,54 @@ fun OnboardingHeatingScreen(
                 onOptionSelected = viewModel::onHeatingTypeSelected
             )
         }
-        if (showBoilerFields) {
-            SectionDivider()
-            ProfileSection("Boiler type") {
-                SelectionGroup(
-                    options = OnboardingOptions.BOILER_TYPES,
-                    selectedOption = uiState.boilerType,
-                    onOptionSelected = viewModel::onBoilerTypeSelected
-                )
-            }
-            SectionDivider()
-            ProfileSection("Boiler age (approx.)") {
-                SelectionGroup(
-                    options = OnboardingOptions.BOILER_AGE,
-                    selectedOption = uiState.boilerAgeRange,
-                    onOptionSelected = viewModel::onBoilerAgeSelected
-                )
-            }
-            SectionDivider()
-            ProfileSection("Last boiler service") {
-                SelectionGroup(
-                    options = OnboardingOptions.LAST_BOILER_SERVICE,
-                    selectedOption = uiState.lastBoilerService,
-                    onOptionSelected = viewModel::onLastBoilerServiceSelected
-                )
-            }
-        }
         SectionDivider()
-        ProfileSection("Hot water tank") {
-            YesNoChipGroup(value = uiState.hasHotWaterTank, onValueChange = viewModel::onHasHotWaterTankChanged)
-        }
-        SectionDivider()
-        ProfileSection("Radiators") {
-            YesNoChipGroup(value = uiState.hasRadiators, onValueChange = viewModel::onHasRadiatorsChanged)
-        }
-        SectionDivider()
-        ProfileSection("Underfloor heating") {
+        ProfileSection("Cooling type") {
             SelectionGroup(
-                options = OnboardingOptions.UNDERFLOOR_ZONES,
-                selectedOption = uiState.underfloorHeatingZones,
-                onOptionSelected = viewModel::onUnderfloorZonesSelected
+                options = OnboardingOptions.COOLING_TYPES,
+                selectedOption = uiState.coolingType,
+                onOptionSelected = viewModel::onCoolingTypeSelected
             )
+        }
+        SectionDivider()
+        ProfileSection("HVAC age (approx.)") {
+            SelectionGroup(
+                options = OnboardingOptions.HVAC_AGE,
+                selectedOption = uiState.hvacAge,
+                onOptionSelected = viewModel::onHvacAgeSelected
+            )
+        }
+        SectionDivider()
+        ProfileSection("Last HVAC service") {
+            SelectionGroup(
+                options = OnboardingOptions.LAST_HVAC_SERVICE,
+                selectedOption = uiState.lastHvacService,
+                onOptionSelected = viewModel::onLastHvacServiceSelected
+            )
+        }
+        SectionDivider()
+        ProfileSection("Water heater type") {
+            SelectionGroup(
+                options = OnboardingOptions.WATER_HEATER_TYPES,
+                selectedOption = uiState.waterHeaterType,
+                onOptionSelected = viewModel::onWaterHeaterTypeSelected
+            )
+        }
+        SectionDivider()
+        ProfileSection("Water heater age") {
+            SelectionGroup(
+                options = OnboardingOptions.WATER_HEATER_AGE,
+                selectedOption = uiState.waterHeaterAge,
+                onOptionSelected = viewModel::onWaterHeaterAgeSelected
+            )
+        }
+        SectionDivider()
+        ProfileSection("Humidifier / dehumidifier") {
+            YesNoChipGroup(value = uiState.hasHumidifier, onValueChange = viewModel::onHasHumidifierChanged)
         }
     }
 }
 
-// ─── O5 — Outdoor & Garden ───────────────────────────────────────────────────
+// ─── O5 — Outdoor & Exterior ─────────────────────────────────────────────────
 
 @Composable
 fun OnboardingOutdoorScreen(
@@ -312,19 +321,19 @@ fun OnboardingOutdoorScreen(
         onSkip = onSkip,
         onCta = onContinue
     ) {
-        ProfileSection("Garden") {
+        ProfileSection("Yard / lawn") {
             SelectionGroup(
-                options = OnboardingOptions.GARDEN_TYPES,
-                selectedOption = uiState.hasGarden,
-                onOptionSelected = viewModel::onGardenTypeSelected
+                options = OnboardingOptions.YARD_TYPES,
+                selectedOption = uiState.hasYard,
+                onOptionSelected = viewModel::onYardTypeSelected
             )
         }
         SectionDivider()
-        ProfileSection("Driveway / parking") {
+        ProfileSection("Driveway") {
             YesNoChipGroup(value = uiState.driveway, onValueChange = viewModel::onDrivewayChanged)
         }
         SectionDivider()
-        ProfileSection("Gutters & downpipes") {
+        ProfileSection("Gutters & downspouts") {
             SelectionGroup(
                 options = OnboardingOptions.GUTTER_TYPES,
                 selectedOption = uiState.gutterType,
@@ -332,23 +341,27 @@ fun OnboardingOutdoorScreen(
             )
         }
         SectionDivider()
-        ProfileSection("External woodwork (fascias, soffits)") {
+        ProfileSection("Siding type") {
             SelectionGroup(
-                options = OnboardingOptions.WOODWORK_TYPES,
-                selectedOption = uiState.externalWoodwork,
-                onOptionSelected = viewModel::onExternalWoodworkSelected
+                options = OnboardingOptions.SIDING_TYPES,
+                selectedOption = uiState.sidingType,
+                onOptionSelected = viewModel::onSidingTypeSelected
             )
         }
         SectionDivider()
-        ProfileSection("Boundary") {
+        ProfileSection("Fence") {
             SelectionGroup(
-                options = OnboardingOptions.BOUNDARY_TYPES,
-                selectedOption = uiState.boundaryType,
-                onOptionSelected = viewModel::onBoundaryTypeSelected
+                options = OnboardingOptions.FENCE_TYPES,
+                selectedOption = uiState.fenceType,
+                onOptionSelected = viewModel::onFenceTypeSelected
             )
         }
         SectionDivider()
-        ProfileSection("Flat roof sections (garage, bay window)") {
+        ProfileSection("Sprinkler / irrigation system") {
+            YesNoChipGroup(value = uiState.hasSprinklerSystem, onValueChange = viewModel::onHasSprinklerSystemChanged)
+        }
+        SectionDivider()
+        ProfileSection("Flat roof sections (garage, addition)") {
             YesNoChipGroup(value = uiState.hasFlatRoofSections, onValueChange = viewModel::onHasFlatRoofChanged)
         }
     }
@@ -379,11 +392,15 @@ fun OnboardingSystemsScreen(
             )
         }
         SectionDivider()
-        ProfileSection("Mains stop valve location known") {
-            YesNoChipGroup(value = uiState.stopValveKnown, onValueChange = viewModel::onStopValveKnownChanged)
+        ProfileSection("Main water shut-off location known") {
+            YesNoChipGroup(value = uiState.waterShutoffKnown, onValueChange = viewModel::onWaterShutoffKnownChanged)
         }
         SectionDivider()
-        ProfileSection("Septic tank") {
+        ProfileSection("Sump pump") {
+            YesNoChipGroup(value = uiState.hasSumpPump, onValueChange = viewModel::onHasSumpPumpChanged)
+        }
+        SectionDivider()
+        ProfileSection("Septic system") {
             YesNoChipGroup(value = uiState.hasSepticTank, onValueChange = viewModel::onHasSepticTankChanged)
         }
         SectionDivider()

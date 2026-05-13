@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.albersa.homeprofile.domain.model.HomeProfile
 import com.albersa.homeprofile.domain.usecase.SaveOnboardingProfileUseCase
-import com.albersa.homeprofile.domain.util.PostcodeMapper
+import com.albersa.homeprofile.domain.util.ZipCodeMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,34 +20,37 @@ data class OnboardingUiState(
     val yearBuiltRange: String? = null,
     val bedrooms: Int? = null,
     val floors: Int? = null,
-    val postcodeInput: String = "",
+    val zipCodeInput: String = "",
     val locationClimateZone: String? = null,
     // O3 — Construction
     val wallType: String? = null,
     val wallInsulation: String? = null,
     val roofType: String? = null,
-    val loftInsulation: String? = null,
-    val doubleGlazing: String? = null,
-    val hasBasement: Boolean? = null,
-    val hasConservatory: Boolean? = null,
-    // O4 — Heating & Hot Water
+    val atticInsulation: String? = null,
+    val windowType: String? = null,
+    val basementType: String? = null,
+    val hasDeck: Boolean? = null,
+    val hasAttachedGarage: Boolean? = null,
+    // O4 — Heating & Cooling
     val heatingType: String? = null,
-    val boilerType: String? = null,
-    val boilerAgeRange: String? = null,
-    val lastBoilerService: String? = null,
-    val hasHotWaterTank: Boolean? = null,
-    val hasRadiators: Boolean? = null,
-    val underfloorHeatingZones: String? = null,
-    // O5 — Outdoor & Garden
-    val hasGarden: String? = null,
+    val coolingType: String? = null,
+    val hvacAge: String? = null,
+    val lastHvacService: String? = null,
+    val waterHeaterType: String? = null,
+    val waterHeaterAge: String? = null,
+    val hasHumidifier: Boolean? = null,
+    // O5 — Outdoor & Exterior
+    val hasYard: String? = null,
     val driveway: Boolean? = null,
     val gutterType: String? = null,
-    val externalWoodwork: String? = null,
-    val boundaryType: String? = null,
+    val sidingType: String? = null,
+    val fenceType: String? = null,
+    val hasSprinklerSystem: Boolean? = null,
     val hasFlatRoofSections: Boolean? = null,
     // O6 — Systems & Appliances
     val smokeAlarmsSelection: String? = null,
-    val stopValveKnown: Boolean? = null,
+    val waterShutoffKnown: Boolean? = null,
+    val hasSumpPump: Boolean? = null,
     val hasSepticTank: Boolean? = null,
     val hasSolar: Boolean = false,
     val hasEvCharger: Boolean? = null,
@@ -72,42 +75,40 @@ class OnboardingViewModel @Inject constructor(
     fun onYearBuiltSelected(v: String) = _uiState.update { it.copy(yearBuiltRange = v) }
     fun onBedroomsSelected(v: Int) = _uiState.update { it.copy(bedrooms = v) }
     fun onFloorsSelected(v: Int) = _uiState.update { it.copy(floors = v) }
-    fun onPostcodeChanged(v: String) = _uiState.update { it.copy(postcodeInput = v) }
+    fun onZipCodeChanged(v: String) = _uiState.update { it.copy(zipCodeInput = v) }
 
     // O3
     fun onWallTypeSelected(v: String) = _uiState.update { it.copy(wallType = v) }
     fun onWallInsulationSelected(v: String) = _uiState.update { it.copy(wallInsulation = v) }
     fun onRoofTypeSelected(v: String) = _uiState.update { it.copy(roofType = v) }
-    fun onLoftInsulationSelected(v: String) = _uiState.update { it.copy(loftInsulation = v) }
-    fun onDoubleGlazingSelected(v: String) = _uiState.update { it.copy(doubleGlazing = v) }
-    fun onHasBasementChanged(v: Boolean) = _uiState.update { it.copy(hasBasement = v) }
-    fun onHasConservatoryChanged(v: Boolean) = _uiState.update { it.copy(hasConservatory = v) }
+    fun onAtticInsulationSelected(v: String) = _uiState.update { it.copy(atticInsulation = v) }
+    fun onWindowTypeSelected(v: String) = _uiState.update { it.copy(windowType = v) }
+    fun onBasementTypeSelected(v: String) = _uiState.update { it.copy(basementType = v) }
+    fun onHasDeckChanged(v: Boolean) = _uiState.update { it.copy(hasDeck = v) }
+    fun onHasAttachedGarageChanged(v: Boolean) = _uiState.update { it.copy(hasAttachedGarage = v) }
 
     // O4
-    fun onHeatingTypeSelected(v: String) = _uiState.update {
-        it.copy(
-            heatingType = v,
-            boilerType = if (v !in OnboardingOptions.BOILER_HEATING_TYPES) null else it.boilerType
-        )
-    }
-    fun onBoilerTypeSelected(v: String) = _uiState.update { it.copy(boilerType = v) }
-    fun onBoilerAgeSelected(v: String) = _uiState.update { it.copy(boilerAgeRange = v) }
-    fun onLastBoilerServiceSelected(v: String) = _uiState.update { it.copy(lastBoilerService = v) }
-    fun onHasHotWaterTankChanged(v: Boolean) = _uiState.update { it.copy(hasHotWaterTank = v) }
-    fun onHasRadiatorsChanged(v: Boolean) = _uiState.update { it.copy(hasRadiators = v) }
-    fun onUnderfloorZonesSelected(v: String) = _uiState.update { it.copy(underfloorHeatingZones = v) }
+    fun onHeatingTypeSelected(v: String) = _uiState.update { it.copy(heatingType = v) }
+    fun onCoolingTypeSelected(v: String) = _uiState.update { it.copy(coolingType = v) }
+    fun onHvacAgeSelected(v: String) = _uiState.update { it.copy(hvacAge = v) }
+    fun onLastHvacServiceSelected(v: String) = _uiState.update { it.copy(lastHvacService = v) }
+    fun onWaterHeaterTypeSelected(v: String) = _uiState.update { it.copy(waterHeaterType = v) }
+    fun onWaterHeaterAgeSelected(v: String) = _uiState.update { it.copy(waterHeaterAge = v) }
+    fun onHasHumidifierChanged(v: Boolean) = _uiState.update { it.copy(hasHumidifier = v) }
 
     // O5
-    fun onGardenTypeSelected(v: String) = _uiState.update { it.copy(hasGarden = v) }
+    fun onYardTypeSelected(v: String) = _uiState.update { it.copy(hasYard = v) }
     fun onDrivewayChanged(v: Boolean) = _uiState.update { it.copy(driveway = v) }
     fun onGutterTypeSelected(v: String) = _uiState.update { it.copy(gutterType = v) }
-    fun onExternalWoodworkSelected(v: String) = _uiState.update { it.copy(externalWoodwork = v) }
-    fun onBoundaryTypeSelected(v: String) = _uiState.update { it.copy(boundaryType = v) }
+    fun onSidingTypeSelected(v: String) = _uiState.update { it.copy(sidingType = v) }
+    fun onFenceTypeSelected(v: String) = _uiState.update { it.copy(fenceType = v) }
+    fun onHasSprinklerSystemChanged(v: Boolean) = _uiState.update { it.copy(hasSprinklerSystem = v) }
     fun onHasFlatRoofChanged(v: Boolean) = _uiState.update { it.copy(hasFlatRoofSections = v) }
 
     // O6
     fun onSmokeAlarmsSelected(v: String) = _uiState.update { it.copy(smokeAlarmsSelection = v) }
-    fun onStopValveKnownChanged(v: Boolean) = _uiState.update { it.copy(stopValveKnown = v) }
+    fun onWaterShutoffKnownChanged(v: Boolean) = _uiState.update { it.copy(waterShutoffKnown = v) }
+    fun onHasSumpPumpChanged(v: Boolean) = _uiState.update { it.copy(hasSumpPump = v) }
     fun onHasSepticTankChanged(v: Boolean) = _uiState.update { it.copy(hasSepticTank = v) }
     fun onHasSolarChanged(v: Boolean) = _uiState.update { it.copy(hasSolar = v) }
     fun onHasEvChargerChanged(v: Boolean) = _uiState.update { it.copy(hasEvCharger = v) }
@@ -118,8 +119,8 @@ class OnboardingViewModel @Inject constructor(
     fun saveProfile() {
         if (_uiState.value.isSaving) return
         val state = _uiState.value
-        val climateZone = if (state.postcodeInput.isNotBlank())
-            PostcodeMapper.mapToClimateZone(state.postcodeInput)
+        val climateZone = if (state.zipCodeInput.isNotBlank())
+            ZipCodeMapper.mapToClimateZone(state.zipCodeInput)
         else
             state.locationClimateZone
 
@@ -133,29 +134,32 @@ class OnboardingViewModel @Inject constructor(
             wallType = state.wallType,
             wallInsulation = state.wallInsulation,
             roofType = state.roofType,
-            loftInsulation = state.loftInsulation,
-            doubleGlazing = state.doubleGlazing,
-            hasBasement = state.hasBasement,
-            hasConservatory = state.hasConservatory,
+            atticInsulation = state.atticInsulation,
+            windowType = state.windowType,
+            basementType = state.basementType,
+            hasDeck = state.hasDeck,
+            hasAttachedGarage = state.hasAttachedGarage,
             heatingType = state.heatingType,
-            boilerType = state.boilerType,
-            boilerAgeRange = state.boilerAgeRange,
-            lastBoilerService = state.lastBoilerService,
-            hasHotWaterTank = state.hasHotWaterTank,
-            hasRadiators = state.hasRadiators,
-            underfloorHeatingZones = state.underfloorHeatingZones,
-            hasGarden = state.hasGarden,
+            coolingType = state.coolingType,
+            hvacAge = state.hvacAge,
+            lastHvacService = state.lastHvacService,
+            waterHeaterType = state.waterHeaterType,
+            waterHeaterAge = state.waterHeaterAge,
+            hasHumidifier = state.hasHumidifier,
+            hasYard = state.hasYard,
             driveway = state.driveway,
             gutterType = state.gutterType,
-            externalWoodwork = state.externalWoodwork,
-            boundaryType = state.boundaryType,
+            sidingType = state.sidingType,
+            fenceType = state.fenceType,
+            hasSprinklerSystem = state.hasSprinklerSystem,
             hasFlatRoofSections = state.hasFlatRoofSections,
             hasSmokeAlarms = when (state.smokeAlarmsSelection) {
                 "Yes" -> true
                 "No" -> false
                 else -> null
             },
-            stopValveKnown = state.stopValveKnown,
+            waterShutoffKnown = state.waterShutoffKnown,
+            hasSumpPump = state.hasSumpPump,
             hasSepticTank = state.hasSepticTank,
             hasSolar = state.hasSolar,
             hasEvCharger = state.hasEvCharger,
