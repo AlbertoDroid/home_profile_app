@@ -1,0 +1,434 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "bfe7a85b346da87cd35a7948fb31fe3d",
+    "entities": [
+      {
+        "tableName": "home_profile",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `propertyType` TEXT, `ownership` TEXT, `yearBuiltRange` TEXT, `bedrooms` INTEGER, `floors` INTEGER, `locationClimateZone` TEXT, `wallType` TEXT, `wallInsulation` TEXT, `roofType` TEXT, `loftInsulation` TEXT, `doubleGlazing` TEXT, `hasBasement` INTEGER, `hasConservatory` INTEGER, `heatingType` TEXT, `boilerType` TEXT, `boilerAgeRange` TEXT, `lastBoilerService` TEXT, `hasHotWaterTank` INTEGER, `hasRadiators` INTEGER, `underfloorHeatingZones` TEXT, `hasGarden` TEXT, `driveway` TEXT, `gutterType` TEXT, `externalWoodwork` TEXT, `boundaryType` TEXT, `hasFlatRoofSections` INTEGER, `hasSmokeAlarms` INTEGER, `stopValveKnown` INTEGER, `hasSepticTank` INTEGER, `hasSolar` INTEGER NOT NULL, `hasEvCharger` INTEGER, `hasSecuritySystem` INTEGER, `profileComplete` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, `updatedAt` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "propertyType",
+            "columnName": "propertyType",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "ownership",
+            "columnName": "ownership",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "yearBuiltRange",
+            "columnName": "yearBuiltRange",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "bedrooms",
+            "columnName": "bedrooms",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "floors",
+            "columnName": "floors",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "locationClimateZone",
+            "columnName": "locationClimateZone",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "wallType",
+            "columnName": "wallType",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "wallInsulation",
+            "columnName": "wallInsulation",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "roofType",
+            "columnName": "roofType",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "loftInsulation",
+            "columnName": "loftInsulation",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "doubleGlazing",
+            "columnName": "doubleGlazing",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "hasBasement",
+            "columnName": "hasBasement",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "hasConservatory",
+            "columnName": "hasConservatory",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "heatingType",
+            "columnName": "heatingType",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "boilerType",
+            "columnName": "boilerType",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "boilerAgeRange",
+            "columnName": "boilerAgeRange",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "lastBoilerService",
+            "columnName": "lastBoilerService",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "hasHotWaterTank",
+            "columnName": "hasHotWaterTank",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "hasRadiators",
+            "columnName": "hasRadiators",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "underfloorHeatingZones",
+            "columnName": "underfloorHeatingZones",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "hasGarden",
+            "columnName": "hasGarden",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "driveway",
+            "columnName": "driveway",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "gutterType",
+            "columnName": "gutterType",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "externalWoodwork",
+            "columnName": "externalWoodwork",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "boundaryType",
+            "columnName": "boundaryType",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "hasFlatRoofSections",
+            "columnName": "hasFlatRoofSections",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "hasSmokeAlarms",
+            "columnName": "hasSmokeAlarms",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "stopValveKnown",
+            "columnName": "stopValveKnown",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "hasSepticTank",
+            "columnName": "hasSepticTank",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "hasSolar",
+            "columnName": "hasSolar",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hasEvCharger",
+            "columnName": "hasEvCharger",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "hasSecuritySystem",
+            "columnName": "hasSecuritySystem",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "profileComplete",
+            "columnName": "profileComplete",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "maintenance_task",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `taskKey` TEXT NOT NULL, `title` TEXT NOT NULL, `category` TEXT NOT NULL, `whyThisHome` TEXT NOT NULL, `optimalMonthStart` INTEGER NOT NULL, `optimalMonthEnd` INTEGER NOT NULL, `urgency` TEXT NOT NULL, `effortDiyHours` REAL, `difficulty` TEXT NOT NULL, `recurrence` TEXT NOT NULL, `appliesBecause` TEXT NOT NULL, `isCompletedThisCycle` INTEGER NOT NULL, `snoozedUntil` INTEGER, `generatedAt` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "taskKey",
+            "columnName": "taskKey",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "category",
+            "columnName": "category",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "whyThisHome",
+            "columnName": "whyThisHome",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "optimalMonthStart",
+            "columnName": "optimalMonthStart",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "optimalMonthEnd",
+            "columnName": "optimalMonthEnd",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "urgency",
+            "columnName": "urgency",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "effortDiyHours",
+            "columnName": "effortDiyHours",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "difficulty",
+            "columnName": "difficulty",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "recurrence",
+            "columnName": "recurrence",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "appliesBecause",
+            "columnName": "appliesBecause",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isCompletedThisCycle",
+            "columnName": "isCompletedThisCycle",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "snoozedUntil",
+            "columnName": "snoozedUntil",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "generatedAt",
+            "columnName": "generatedAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_maintenance_task_taskKey",
+            "unique": true,
+            "columnNames": [
+              "taskKey"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_maintenance_task_taskKey` ON `${TABLE_NAME}` (`taskKey`)"
+          }
+        ]
+      },
+      {
+        "tableName": "task_log_entry",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `taskId` INTEGER NOT NULL, `taskTitle` TEXT NOT NULL, `taskCategory` TEXT NOT NULL, `completedAt` INTEGER NOT NULL, `notes` TEXT, `amended` INTEGER NOT NULL, FOREIGN KEY(`taskId`) REFERENCES `maintenance_task`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "taskId",
+            "columnName": "taskId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "taskTitle",
+            "columnName": "taskTitle",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "taskCategory",
+            "columnName": "taskCategory",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "completedAt",
+            "columnName": "completedAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "notes",
+            "columnName": "notes",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "amended",
+            "columnName": "amended",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_task_log_entry_taskId",
+            "unique": false,
+            "columnNames": [
+              "taskId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_task_log_entry_taskId` ON `${TABLE_NAME}` (`taskId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "maintenance_task",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "taskId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "notification_log",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `notificationType` TEXT NOT NULL, `taskIdsIncluded` TEXT NOT NULL, `sentAt` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "notificationType",
+            "columnName": "notificationType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "taskIdsIncluded",
+            "columnName": "taskIdsIncluded",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sentAt",
+            "columnName": "sentAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'bfe7a85b346da87cd35a7948fb31fe3d')"
+    ]
+  }
+}

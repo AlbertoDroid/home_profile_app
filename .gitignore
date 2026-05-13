@@ -1,0 +1,52 @@
+# Built application files
+*.apk
+*.aar
+*.ap_
+*.aab
+
+# Gradle files
+.gradle/
+build/
+**/build/
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
+
+# Local configuration
+local.properties
+keystore.properties
+*.keystore
+*.jks
+
+# IntelliJ / Android Studio
+.idea/*
+*.iml
+*.ipr
+*.iws
+out/
+
+# macOS
+.DS_Store
+
+# NDK / CMake
+.externalNativeBuild/
+.cxx/
+
+# Kotlin build caches
+**/.kotlin/
+
+# Captures (Android Studio profiler)
+/captures
+
+# Lint output
+lint/intermediates/
+lint/generated/
+lint/outputs/
+lint/tmp/
+
+# Google Services (contains project IDs — review before committing)
+google-services.json
+
+# Secrets — never commit
+**/secrets.properties
+**/api_keys.properties
