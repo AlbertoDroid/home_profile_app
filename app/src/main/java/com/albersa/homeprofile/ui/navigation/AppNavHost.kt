@@ -122,13 +122,36 @@ fun AppNavHost(
         }
 
         composable(Screen.OnboardingGenerating.route) {
+            val welcomeEntry = remember(navController) {
+                navController.getBackStackEntry(Screen.OnboardingWelcome.route)
+            }
+            val viewModel: OnboardingViewModel = hiltViewModel(welcomeEntry)
+            val uiState by viewModel.uiState.collectAsState()
+
+            LaunchedEffect(uiState.generationSuccess) {
+                if (uiState.generationSuccess) {
+                    viewModel.onGenerationSuccessConsumed()
+                    navController.navigate(Screen.OnboardingReady.route)
+                }
+            }
+
             OnboardingGeneratingScreen(
-                onNext = { navController.navigate(Screen.OnboardingReady.route) }
+                isGenerating = uiState.isGenerating,
+                error = uiState.generationError,
+                onRetry = viewModel::retryGeneration
             )
         }
 
         composable(Screen.OnboardingReady.route) {
+            val welcomeEntry = remember(navController) {
+                navController.getBackStackEntry(Screen.OnboardingWelcome.route)
+            }
+            val viewModel: OnboardingViewModel = hiltViewModel(welcomeEntry)
+            val uiState by viewModel.uiState.collectAsState()
+
             OnboardingReadyScreen(
+                taskCount = uiState.generatedTaskCount,
+                previewTasks = uiState.previewTasks,
                 onNext = {
                     navController.navigate(Screen.Dashboard.route) {
                         popUpTo(Screen.OnboardingWelcome.route) { inclusive = true }

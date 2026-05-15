@@ -12,22 +12,32 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.albersa.homeprofile.domain.model.MaintenanceTask
 import com.albersa.homeprofile.ui.components.OnboardingScaffold
 import com.albersa.homeprofile.ui.components.SelectionGroup
 import com.albersa.homeprofile.ui.components.YesNoChipGroup
+import kotlinx.coroutines.delay
 
 // ─── O1 — Welcome ────────────────────────────────────────────────────────────
 
@@ -426,21 +436,135 @@ fun OnboardingSystemsScreen(
     }
 }
 
-// ─── O7 — Generating Calendar (placeholder for M3) ───────────────────────────
+// ─── O7 — Generating Calendar ────────────────────────────────────────────────
+
+private val generatingMessages = listOf(
+    "Checking your roof type...",
+    "Planning your HVAC schedule...",
+    "Preparing your seasonal checklist...",
+    "Reviewing your safety systems...",
+    "Personalising your calendar...",
+    "Almost there..."
+)
 
 @Composable
-fun OnboardingGeneratingScreen(onNext: () -> Unit) {
+fun OnboardingGeneratingScreen(
+    isGenerating: Boolean,
+    error: String?,
+    onRetry: () -> Unit
+) {
+    var messageIndex by remember { mutableIntStateOf(0) }
+
+    LaunchedEffect(isGenerating) {
+        if (isGenerating) {
+            while (true) {
+                delay(2000)
+                messageIndex = (messageIndex + 1) % generatingMessages.size
+            }
+        }
+    }
+
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text("O7 — Generating Calendar")
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(24.dp),
+            modifier = Modifier.padding(32.dp)
+        ) {
+            if (error != null) {
+                Text(
+                    text = "Something went wrong",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = error,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error,
+                    textAlign = TextAlign.Center
+                )
+                Button(onClick = onRetry) {
+                    Text("Try Again")
+                }
+            } else {
+                CircularProgressIndicator(modifier = Modifier.size(56.dp))
+                Text(
+                    text = "Building your calendar",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = generatingMessages[messageIndex],
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
     }
 }
 
-// ─── O8 — Your Home is Ready (placeholder for M3) ────────────────────────────
+// ─── O8 — Your Home is Ready ─────────────────────────────────────────────────
 
 @Composable
-fun OnboardingReadyScreen(onNext: () -> Unit) {
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text("O8 — Your Home is Ready")
+fun OnboardingReadyScreen(
+    taskCount: Int,
+    previewTasks: List<MaintenanceTask>,
+    onNext: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "Your home is set up!",
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center
+        )
+        Spacer(Modifier.height(12.dp))
+        Text(
+            text = "We found $taskCount maintenance tasks for your home",
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center
+        )
+        if (previewTasks.isNotEmpty()) {
+            Spacer(Modifier.height(24.dp))
+            Text(
+                text = "Coming up first:",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(Modifier.height(8.dp))
+            previewTasks.forEach { task ->
+                TaskPreviewCard(task)
+                Spacer(Modifier.height(8.dp))
+            }
+        }
+        Spacer(Modifier.height(32.dp))
+        Button(
+            onClick = onNext,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("See My Calendar")
+        }
+    }
+}
+
+@Composable
+private fun TaskPreviewCard(task: MaintenanceTask) {
+    Card(modifier = Modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Text(text = task.title, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Medium)
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                SuggestionChip(onClick = {}, label = { Text(task.category) })
+                SuggestionChip(onClick = {}, label = { Text(task.urgency) })
+            }
+        }
     }
 }
 

@@ -3,6 +3,8 @@ package com.albersa.homeprofile.ui.onboarding
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.albersa.homeprofile.domain.model.HomeProfile
+import com.albersa.homeprofile.domain.model.MaintenanceTask
+import com.albersa.homeprofile.domain.repository.MaintenanceTaskRepository
 import com.albersa.homeprofile.domain.usecase.SaveOnboardingProfileUseCase
 import com.albersa.homeprofile.domain.util.ZipCodeMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -55,15 +57,22 @@ data class OnboardingUiState(
     val hasSolar: Boolean = false,
     val hasEvCharger: Boolean? = null,
     val hasSecuritySystem: Boolean? = null,
-    // Meta
+    // Save state
     val isSaving: Boolean = false,
     val saveError: String? = null,
-    val saveSuccess: Boolean = false
+    val saveSuccess: Boolean = false,
+    // Generation state (O7–O8)
+    val isGenerating: Boolean = false,
+    val generationError: String? = null,
+    val generationSuccess: Boolean = false,
+    val generatedTaskCount: Int = 0,
+    val previewTasks: List<MaintenanceTask> = emptyList()
 )
 
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
-    private val saveOnboardingProfile: SaveOnboardingProfileUseCase
+    private val saveOnboardingProfile: SaveOnboardingProfileUseCase,
+    private val taskRepository: MaintenanceTaskRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(OnboardingUiState())
@@ -115,16 +124,67 @@ class OnboardingViewModel @Inject constructor(
     fun onHasSecuritySystemChanged(v: Boolean) = _uiState.update { it.copy(hasSecuritySystem = v) }
 
     fun onSaveSuccessConsumed() = _uiState.update { it.copy(saveSuccess = false) }
+    fun onGenerationSuccessConsumed() = _uiState.update { it.copy(generationSuccess = false) }
 
     fun saveProfile() {
         if (_uiState.value.isSaving) return
+        val profile = buildProfile(_uiState.value)
+        _uiState.update { it.copy(isSaving = true, saveError = null) }
+        viewModelScope.launch {
+            saveOnboardingProfile(profile).fold(
+                onSuccess = {
+                    _uiState.update { it.copy(isSaving = false, saveSuccess = true, isGenerating = true) }
+                    generateCalendar(profile)
+                },
+                onFailure = { e ->
+                    _uiState.update { it.copy(isSaving = false, saveError = e.message ?: "Save failed") }
+                }
+            )
+        }
+    }
+
+    fun retryGeneration() {
         val state = _uiState.value
+        if (state.isGenerating) return
+        _uiState.update { it.copy(isGenerating = true, generationError = null) }
+        viewModelScope.launch {
+            generateCalendar(buildProfile(state))
+        }
+    }
+
+    private suspend fun generateCalendar(profile: HomeProfile) {
+        taskRepository.generateAndStore(profile).fold(
+            onSuccess = { tasks ->
+                val preview = tasks
+                    .sortedBy { it.optimalMonthStart }
+                    .take(3)
+                _uiState.update {
+                    it.copy(
+                        isGenerating = false,
+                        generationSuccess = true,
+                        generatedTaskCount = tasks.size,
+                        previewTasks = preview
+                    )
+                }
+            },
+            onFailure = { e ->
+                _uiState.update {
+                    it.copy(
+                        isGenerating = false,
+                        generationError = e.message ?: "Calendar generation failed"
+                    )
+                }
+            }
+        )
+    }
+
+    private fun buildProfile(state: OnboardingUiState): HomeProfile {
         val climateZone = if (state.zipCodeInput.isNotBlank())
             ZipCodeMapper.mapToClimateZone(state.zipCodeInput)
         else
             state.locationClimateZone
 
-        val profile = HomeProfile(
+        return HomeProfile(
             propertyType = state.propertyType,
             ownership = state.ownership,
             yearBuiltRange = state.yearBuiltRange,
@@ -165,17 +225,5 @@ class OnboardingViewModel @Inject constructor(
             hasEvCharger = state.hasEvCharger,
             hasSecuritySystem = state.hasSecuritySystem
         )
-
-        _uiState.update { it.copy(isSaving = true, saveError = null) }
-        viewModelScope.launch {
-            saveOnboardingProfile(profile).fold(
-                onSuccess = {
-                    _uiState.update { it.copy(isSaving = false, saveSuccess = true) }
-                },
-                onFailure = { e ->
-                    _uiState.update { it.copy(isSaving = false, saveError = e.message ?: "Save failed") }
-                }
-            )
-        }
     }
 }
